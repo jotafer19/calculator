@@ -1,0 +1,18 @@
+#container {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+}
+#screen {
+    height: 100px;
+    background-color: antiquewhite;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+#button-panel {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+}
