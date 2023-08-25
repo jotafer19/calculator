@@ -52,26 +52,28 @@ buttonReset.addEventListener("click", resetCalculator);
 
 buttonDelete.addEventListener("click", deleteDigit);
 
-buttonNumber.forEach(button => {
-    button.addEventListener("click", e => {
-        if (!operatorUsed) {
-            if (resultGot) {
-                leftNumber = "";
-                resultGot = false; 
-            }
-            (leftNumber === "") ? leftNumber = e.target.textContent : leftNumber += e.target.textContent;
-            screenMainDisplay.textContent = leftNumber;
-        } else {
-            console.log("right");
-            (rightNumber === "") ? rightNumber = e.target.textContent : rightNumber += e.target.textContent;
-            screenMainDisplay.textContent = rightNumber;
+function getNumber(e) {
+    if (!operatorUsed) {
+        if (resultGot) {
+            leftNumber = "";
+            resultGot = false; 
         }
-    })
+        (leftNumber === "") ? leftNumber = e.target.textContent : leftNumber += e.target.textContent;
+        screenMainDisplay.textContent = leftNumber;
+    } else {
+        console.log("right");
+        (rightNumber === "") ? rightNumber = e.target.textContent : rightNumber += e.target.textContent;
+        screenMainDisplay.textContent = rightNumber;
+    }
+}
+
+buttonNumber.forEach(button => {
+    button.addEventListener("click", getNumber);
 })
 
 buttonOperator.forEach(button => {
     button.addEventListener("click", e => {
-        if (leftNumber === "") leftNumber = 0;
+        if (leftNumber === "") leftNumber = "0";
         if (rightNumber === "0" && operator === "÷") {
             resetCalculator();
             screenSubDisplay.textContent = "ERROR";
@@ -120,4 +122,19 @@ buttonEqual.addEventListener("click", () => {
         operatorUsed = false;
     }
 })
-    
+
+buttonDot.addEventListener("click", () => {
+    if (!operatorUsed) {
+        if (leftNumber === "") leftNumber = "0";
+        if (!leftNumber.includes(".")) {
+            leftNumber += ".";
+            screenMainDisplay.textContent = leftNumber;
+        }
+    } else {
+        if (rightNumber === "") rightNumber = "0";
+        if (!rightNumber.includes(".")) {
+            rightNumber += ".";
+            screenMainDisplay.textContent = rightNumber;
+        }
+    }
+});
