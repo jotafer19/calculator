@@ -55,13 +55,14 @@ buttonDelete.addEventListener("click", deleteDigit);
 buttonNumber.forEach(button => {
     button.addEventListener("click", e => {
         if (!operatorUsed) {
-            if (resultGot === true) {
+            if (resultGot) {
                 leftNumber = "";
                 resultGot = false; 
             }
             (leftNumber === "") ? leftNumber = e.target.textContent : leftNumber += e.target.textContent;
             screenMainDisplay.textContent = leftNumber;
         } else {
+            console.log("right");
             (rightNumber === "") ? rightNumber = e.target.textContent : rightNumber += e.target.textContent;
             screenMainDisplay.textContent = rightNumber;
         }
@@ -71,13 +72,14 @@ buttonNumber.forEach(button => {
 buttonOperator.forEach(button => {
     button.addEventListener("click", e => {
         if (leftNumber === "") leftNumber = 0;
-        if (operatorUsed) {
-            result = doOperation(rightNumber, operator);
-            resultGot = true;
-            leftNumber = result;
-            rightNumber = "";
+        if (rightNumber === "0" && operator === "÷") {
+            resetCalculator();
+            screenSubDisplay.textContent = "ERROR";
+            screenMainDisplay.textContent = "You can not divide by 0!";
+        } else if (operatorUsed && rightNumber !== "") {
+            leftNumber = doOperation();
             operator = e.target.textContent;
-            screenSubDisplay.textContent = `${result} ${operator}`
+            screenSubDisplay.textContent = `${leftNumber} ${operator}`
         } else {
             operator = e.target.textContent;
             screenSubDisplay.textContent = `${screenMainDisplay.textContent} ${operator} `;
@@ -99,22 +101,23 @@ function getOperation(operator) {
     }
 }
 
-function doOperation(rightNumber, operator) {
-    if (rightNumber == 0 && operator === "÷") {
-        alert("You can not divide by 0!");
-        rightNumber = "";
-    } else if (rightNumber !== "") {
-        let operationCheck = getOperation(operator);
-        screenSubDisplay.textContent = `${leftNumber} ${operator} ${rightNumber} =`
-        screenMainDisplay.textContent = operationCheck;
-        return operationCheck;
+function doOperation() {
+    let operation = Math.round((getOperation(operator) + Number.EPSILON) * 100) / 100;
+    screenSubDisplay.textContent = `${leftNumber} ${operator} ${rightNumber} =`
+    screenMainDisplay.textContent = operation;
+    resultGot = true;
+    rightNumber = "";
+    return operation;
     }
-}
 
 buttonEqual.addEventListener("click", () => {
-    result = doOperation(rightNumber, operator);
-    resultGot = true;
-    operatorUsed = false;
-    leftNumber = result;
-    rightNumber = "";
+    if (rightNumber === "0" && operator === "÷") {
+        resetCalculator();
+        screenSubDisplay.textContent = "ERROR";
+        screenMainDisplay.textContent = "You can not divide by 0!";
+    } else if (leftNumber !== "" && rightNumber !== "") {
+        leftNumber = doOperation();
+        operatorUsed = false;
+    }
 })
+    
