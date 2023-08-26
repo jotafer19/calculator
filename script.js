@@ -21,6 +21,7 @@ let rightNumber = "";
 let resultGot = false;
 let result;
 let mainScreenReset = false;
+let rightNumberCheck = false;
 
 const buttonReset = document.querySelector("#reset");
 const buttonDelete = document.querySelector("#delete");
@@ -39,10 +40,13 @@ function resetCalculator() {
     operator = "";
     operatorUsed = false;
     resultGot = false;
+    mainScreenReset = false;
+    rightNumberCheck = false;
 }
 
 function deleteDigit() {
     screenMainDisplay.textContent = screenMainDisplay.textContent.slice(0, -1);
+    if (screenMainDisplay.textContent === "") screenMainDisplay.textContent = "0";
 }
 
 buttonReset.addEventListener("click", resetCalculator);
@@ -56,21 +60,24 @@ function resetScreen() {
     mainScreenReset = false;
 }
 
-function getNumber(e) {
-    if (!operatorUsed) {
+function getNumber(number) {
+    if (!rightNumberCheck) {
         if (resultGot) {
             resetCalculator();
         }
         resetScreen();
-        screenMainDisplay.textContent += e.target.textContent;
+        screenMainDisplay.textContent += number;
     } else {
         resetScreen();
-        screenMainDisplay.textContent += e.target.textContent;
+        screenMainDisplay.textContent += number;
+        operatorUsed = true;
     }
 }
 
 buttonNumber.forEach(button => {
-    button.addEventListener("click", getNumber);
+    button.addEventListener("click", () => {
+        getNumber(button.textContent);
+    });
 })
 
 function divideByCero() {
@@ -80,26 +87,32 @@ function divideByCero() {
     resultGot = true;
 }
 
-buttonOperator.forEach(button => {
-    button.addEventListener("click", e => {
-        if (!operatorUsed){
-            leftNumber = screenMainDisplay.textContent;
-            operator = e.target.textContent;
-            screenSubDisplay.textContent = `${screenMainDisplay.textContent} ${operator} `;
-            operatorUsed = true;
+function operateSymbol(symbol) {
+    if (!operatorUsed){
+        leftNumber = screenMainDisplay.textContent;
+        operator = symbol;
+        screenSubDisplay.textContent = `${screenMainDisplay.textContent} ${operator} `;
+        mainScreenReset = true;
+        rightNumberCheck = true;
+    } else {
+        rightNumber = screenMainDisplay.textContent;
+        if (rightNumber === "0" && operator === "÷") {
+            divideByCero();
+        } else {
+            leftNumber = doOperation();
+            operator = symbol;
+            screenSubDisplay.textContent = `${leftNumber} ${operator}`
+            screenMainDisplay.textContent = leftNumber;
             mainScreenReset = true;
-        } else if (operatorUsed && rightNumber === "") {
-            rightNumber = screenMainDisplay.textContent;
-            if (rightNumber === "0" && operator === "÷") {
-                divideByCero();
-            } else {
-                leftNumber = doOperation();
-                operator = e.target.textContent;
-                screenSubDisplay.textContent = `${leftNumber} ${operator}`
-                screenMainDisplay.textContent = leftNumber;
-                mainScreenReset = true;
-            }
+            operatorUsed = false;
+            rightNumberCheck = true;
         }
+    }
+}
+
+buttonOperator.forEach(button => {
+    button.addEventListener("click", () => {
+        operateSymbol(button.textContent);
     })
 })
 
@@ -109,7 +122,7 @@ function getOperation(operator) {
             return add(leftNumber, rightNumber);
         case "-":
             return subtract(leftNumber, rightNumber);
-        case "×":
+        case "*":
             return multiply(leftNumber, rightNumber);
         case "÷":
             return divide(leftNumber, rightNumber);            
@@ -122,34 +135,60 @@ function doOperation() {
     screenMainDisplay.textContent = operation;
     resultGot = true;
     rightNumber = "";
-    return operation;
+    rightNumberCheck = false;
+    return operation.toString();
     }
 
-buttonEqual.addEventListener("click", () => {
-    rightNumber = screenMainDisplay.textContent;
-    if (rightNumber === "0" && operator === "÷") {
-        divideByCero();
-    } else if (leftNumber !== "" && rightNumber !== "") {
-        leftNumber = doOperation();
-        operatorUsed = false;
-        mainScreenReset = true;
-    }
-})
+buttonEqual.addEventListener("click", getResult)
 
-function addDecimalPoint(){
-    if (!screenMainDisplay.textContent.includes(".")) {
-        screenMainDisplay.textContent += ".";
-    }
+function getResult() {
+    if (operatorUsed === true) { // To avoid pressing '=' many times in a row.
+        rightNumber = screenMainDisplay.textContent;
+        if (rightNumber === "0" && operator === "÷") {
+            divideByCero();
+        } else if (leftNumber !== "" && rightNumber !== "") {
+            leftNumber = doOperation();
+            operatorUsed = false;
+            mainScreenReset = true;
+        }
+    }    
 }
 
-buttonDot.addEventListener("click", () => {
-    if (!operatorUsed) {
-        addDecimalPoint()
+function addDecimalPoint(){
+    if (!rightNumberCheck) {
+        if (resultGot) {
+            resetCalculator();
+        }
+        if (!screenMainDisplay.textContent.includes(".")) {
+            screenMainDisplay.textContent += ".";
+        }
+        mainScreenReset = false;
     } else {
+        console.log(screenMainDisplay.textContent, leftNumber)
         if (screenMainDisplay.textContent === leftNumber) {
             screenMainDisplay.textContent = "0";
             mainScreenReset = false;
         }
-        addDecimalPoint()
+        if (!screenMainDisplay.textContent.includes(".")) {
+            screenMainDisplay.textContent += ".";
+        }
     }
-});
+}
+
+buttonDot.addEventListener("click", addDecimalPoint);
+
+function handleKeyboard(e) {
+    if (e.key >= "0" && e.key <= "9") getNumber(e.key);
+    if (e.key === ".") addDecimalPoint();
+    if (e.key === "Enter")  getResult();
+    if (e.key === "Backspace") deleteDigit();
+    if (e.key === "Escape") resetCalculator();
+    if (e.key === "+" || e.key === "-" || e.key === "*" || e.key === "/") {
+        e.preventDefault(); // Avoid opening the search bar when pressed '/'.
+        let operationKey = e.key; // Used to change '/' symbol to '÷'.
+        if (operationKey === "/") operationKey = "÷";
+        operateSymbol(operationKey);
+    }
+}
+
+window.addEventListener("keydown", handleKeyboard);
