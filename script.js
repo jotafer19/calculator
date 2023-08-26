@@ -83,7 +83,7 @@ buttonNumber.forEach(button => {
 function divideByCero() {
     resetCalculator();
     screenSubDisplay.textContent = "ERROR";
-    screenMainDisplay.textContent = "You can not divide by 0!";
+    screenMainDisplay.textContent = "You cannot divide by 0!";
     resultGot = true;
 }
 
