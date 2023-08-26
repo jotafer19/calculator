@@ -42,11 +42,7 @@ function resetCalculator() {
 }
 
 function deleteDigit() {
-    console.log(leftNumber, operator, rightNumber)
-    let stringToRemove = leftNumber + operator + rightNumber;
-    console.log(stringToRemove);
-    let removedString = stringToRemove.slice(0, -1);
-    console.log(removedString);
+    screenMainDisplay.textContent = screenMainDisplay.textContent.slice(0, -1);
 }
 
 buttonReset.addEventListener("click", resetCalculator);
@@ -77,6 +73,13 @@ buttonNumber.forEach(button => {
     button.addEventListener("click", getNumber);
 })
 
+function divideByCero() {
+    resetCalculator();
+    screenSubDisplay.textContent = "ERROR";
+    screenMainDisplay.textContent = "You can not divide by 0!";
+    resultGot = true;
+}
+
 buttonOperator.forEach(button => {
     button.addEventListener("click", e => {
         if (!operatorUsed){
@@ -85,13 +88,10 @@ buttonOperator.forEach(button => {
             screenSubDisplay.textContent = `${screenMainDisplay.textContent} ${operator} `;
             operatorUsed = true;
             mainScreenReset = true;
-        } else {
+        } else if (operatorUsed && rightNumber === "") {
             rightNumber = screenMainDisplay.textContent;
             if (rightNumber === "0" && operator === "÷") {
-                resetCalculator();
-                screenSubDisplay.textContent = "ERROR";
-                screenMainDisplay.textContent = "You can not divide by 0!";
-                resultGot = true;
+                divideByCero();
             } else {
                 leftNumber = doOperation();
                 operator = e.target.textContent;
@@ -128,10 +128,7 @@ function doOperation() {
 buttonEqual.addEventListener("click", () => {
     rightNumber = screenMainDisplay.textContent;
     if (rightNumber === "0" && operator === "÷") {
-        resetCalculator();
-        screenSubDisplay.textContent = "ERROR";
-        screenMainDisplay.textContent = "You can not divide by 0!";
-        resultGot = true;
+        divideByCero();
     } else if (leftNumber !== "" && rightNumber !== "") {
         leftNumber = doOperation();
         operatorUsed = false;
@@ -139,21 +136,20 @@ buttonEqual.addEventListener("click", () => {
     }
 })
 
+function addDecimalPoint(){
+    if (!screenMainDisplay.textContent.includes(".")) {
+        screenMainDisplay.textContent += ".";
+    }
+}
+
 buttonDot.addEventListener("click", () => {
     if (!operatorUsed) {
-        leftNumber = screenMainDisplay.textContent;
-        if (!leftNumber.includes(".")) {
-            leftNumber += ".";
-            screenMainDisplay.textContent = leftNumber;
-        }
+        addDecimalPoint()
     } else {
         if (screenMainDisplay.textContent === leftNumber) {
             screenMainDisplay.textContent = "0";
             mainScreenReset = false;
         }
-        if (!screenMainDisplay.textContent.includes(".")) {
-            screenMainDisplay.textContent += ".";
-            rightNumber = screenMainDisplay.textContent;
-        }
+        addDecimalPoint()
     }
 });
