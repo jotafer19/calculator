@@ -1,4 +1,4 @@
-<div style="text-align: center;">
+<div align="center">
     <img alt="logo" src="./images/calculator_logo.svg" style="height: 100px">
     <h1>Calculator </h1>
     <p>For simple calculations</p>
