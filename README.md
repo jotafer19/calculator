@@ -3,9 +3,9 @@
     <h1>Calculator </h1>
     <p>For simple calculations</p>
     <p>
-        <a href="https://jotafer19.github.io/calculator">View Demo</a> · 
-        <a href="https://github.com/jotafer19/calculator/issues">Report Bug</a> ·
-        <a href="https://github.com/jotafer19/calculator/issues"> Request Feature</a>
+        <a href="https://jotafer19.github.io/calculator" target="_blank" rel="noreferrer noopener">View Demo</a> · 
+        <a href="https://github.com/jotafer19/calculator/issues" target="_blank" rel="noreferrer noopener">Report Bug</a> ·
+        <a href="https://github.com/jotafer19/calculator/issues" target="_blank" rel="noreferrer noopener"> Request Feature</a>
     </p>
 </div>
 
