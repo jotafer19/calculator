@@ -1,3 +1,21 @@
+let leftNumber = "";
+let rightNumber = "";
+let operator;
+let operatorUsed = false;
+let result;
+let resultGot = false;
+let mainScreenReset = false;
+let rightNumberCheck = false;
+
+const buttonReset = document.querySelector("#reset");
+const buttonDelete = document.querySelector("#delete");
+const buttonNumber = document.querySelectorAll(".button-number");
+const buttonOperator = document.querySelectorAll(".button-operator");
+const buttonEqual = document.querySelector("#button-equal");
+const buttonDot = document.querySelector("#button-dot");
+const screenMainDisplay = document.querySelector("#main-display");
+const screenSubDisplay = document.querySelector("#sub-display");
+
 function add(a, b) {
     return Number(a) + Number(b);
 }
@@ -14,23 +32,12 @@ function divide(a, b) {
     return Number(a) / Number(b);
 }
 
-let leftNumber = "";
-let operator;
-let operatorUsed = false;
-let rightNumber = "";
-let resultGot = false;
-let result;
-let mainScreenReset = false;
-let rightNumberCheck = false;
-
-const buttonReset = document.querySelector("#reset");
-const buttonDelete = document.querySelector("#delete");
-const buttonNumber = document.querySelectorAll(".button-number");
-const buttonOperator = document.querySelectorAll(".button-operator");
-const buttonEqual = document.querySelector("#button-equal");
-const buttonDot = document.querySelector("#button-dot");
-const screenMainDisplay = document.querySelector("#main-display");
-const screenSubDisplay = document.querySelector("#sub-display");
+function resetScreen() {
+    if (screenMainDisplay.textContent === "0" || mainScreenReset) {
+        screenMainDisplay.textContent = "";
+    }
+    mainScreenReset = false;
+}
 
 function resetCalculator() {
     screenMainDisplay.textContent = "0";
@@ -49,17 +56,6 @@ function deleteDigit() {
     if (screenMainDisplay.textContent === "") screenMainDisplay.textContent = "0";
 }
 
-buttonReset.addEventListener("click", resetCalculator);
-
-buttonDelete.addEventListener("click", deleteDigit);
-
-function resetScreen() {
-    if (screenMainDisplay.textContent === "0" || mainScreenReset) {
-        screenMainDisplay.textContent = "";
-    }
-    mainScreenReset = false;
-}
-
 function getNumber(number) {
     if (!rightNumberCheck) {
         if (resultGot) {
@@ -74,16 +70,10 @@ function getNumber(number) {
     }
 }
 
-buttonNumber.forEach(button => {
-    button.addEventListener("click", () => {
-        getNumber(button.textContent);
-    });
-})
-
 function divideByCero() {
     resetCalculator();
-    screenSubDisplay.textContent = "ERROR";
-    screenMainDisplay.textContent = "You cannot divide by 0!";
+    screenSubDisplay.textContent = "";
+    screenMainDisplay.textContent = "ERROR";
     resultGot = true;
 }
 
@@ -110,12 +100,6 @@ function operateSymbol(symbol) {
     }
 }
 
-buttonOperator.forEach(button => {
-    button.addEventListener("click", () => {
-        operateSymbol(button.textContent);
-    })
-})
-
 function getOperation(operator) {
     switch (operator) {
         case "+":
@@ -137,9 +121,7 @@ function doOperation() {
     rightNumber = "";
     rightNumberCheck = false;
     return operation.toString();
-    }
-
-buttonEqual.addEventListener("click", getResult)
+}
 
 function getResult() {
     if (operatorUsed === true) { // To avoid pressing '=' many times in a row.
@@ -175,8 +157,6 @@ function addDecimalPoint(){
     }
 }
 
-buttonDot.addEventListener("click", addDecimalPoint);
-
 function handleKeyboard(e) {
     if (e.key >= "0" && e.key <= "9") getNumber(e.key);
     if (e.key === ".") addDecimalPoint();
@@ -191,4 +171,18 @@ function handleKeyboard(e) {
     }
 }
 
+buttonReset.addEventListener("click", resetCalculator);
+buttonDelete.addEventListener("click", deleteDigit);
+buttonNumber.forEach(button => {
+    button.addEventListener("click", () => {
+        getNumber(button.textContent);
+    });
+})
+buttonOperator.forEach(button => {
+    button.addEventListener("click", () => {
+        operateSymbol(button.textContent);
+    })
+})
+buttonEqual.addEventListener("click", getResult)
+buttonDot.addEventListener("click", addDecimalPoint);
 window.addEventListener("keydown", handleKeyboard);
