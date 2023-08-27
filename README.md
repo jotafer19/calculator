@@ -50,7 +50,7 @@
     - `Operation Keys`: Operates with operands.
     - `Backspace Key`: Deletes a digit.
     - `Enter Key`: Shows the result.
-    - `Esc Key`:  Clears the display.
+    - `'c' Key`:  Clears the display.
 </details>
 
 ## Outcome

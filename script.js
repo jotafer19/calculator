@@ -161,8 +161,11 @@ function handleKeyboard(e) {
     if (e.key >= "0" && e.key <= "9") getNumber(e.key);
     if (e.key === ".") addDecimalPoint();
     if (e.key === "Enter")  getResult();
-    if (e.key === "Backspace") deleteDigit();
-    if (e.key === "Escape") resetCalculator();
+    if (e.key === "Backspace") {
+        e.preventDefault(); // Avoid going back when pressed 'backspace'.
+        deleteDigit()
+    };
+    if (e.key === "c") resetCalculator();
     if (e.key === "+" || e.key === "-" || e.key === "*" || e.key === "/") {
         e.preventDefault(); // Avoid opening the search bar when pressed '/'.
         let operationKey = e.key; // Used to change '/' symbol to '÷'.
