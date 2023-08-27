@@ -34,7 +34,7 @@ body {
     border-radius: 12px;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 10px 40px 12px var(--shadow-color);
+    box-shadow: 10px 10px 40px 12px var(--shadow-color);
 }
 
 #calculator {
@@ -118,4 +118,9 @@ button:hover {
 
 .copyright:hover {
     text-decoration: underline;
+}
+
+#github-logo {
+    height: 1em;
+    width: auto;
 }
