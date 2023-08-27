@@ -6,15 +6,22 @@
     --button-operator-primary-color: #114B5F;
     --button-remove-primary-color: #d5535e;
     --text-color : #e8f1f2;
+    --shadow-color: #252525f2;
 
 }
 
 body {
     font-family: 'Roboto', sans-serif;
     font-weight: 900;
+    color: var(--text-color);
+    background-color: var(--screen-color);
+    padding: 0;
+    margin: 0;
     display: flex;
-    justify-content: center;
-    align-items: flex-end;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 30px;
     box-sizing: border-box;
 }
 
@@ -27,7 +34,7 @@ body {
     border-radius: 12px;
     display: flex;
     flex-direction: column;
-    
+    box-shadow: 0 10px 40px 12px var(--shadow-color);
 }
 
 #calculator {
@@ -92,4 +99,23 @@ button:hover {
     height: 100%;
     grid-template-columns: repeat(4, 1fr);
     gap: 10px;
+}
+
+#footer {
+    bottom: 30px;
+    position: absolute;
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.copyright {
+    color: inherit;
+    text-decoration: none;
+    
+}
+
+.copyright:hover {
+    text-decoration: underline;
 }
